@@ -6,8 +6,8 @@ on:
   workflow_dispatch:        # Manuelles Auslösen per Klick
 
 concurrency:
-  group: auto-update-m3u
-  cancel-in-progress: false
+  group: auto-update-playlist
+  cancel-in-progress: true  # Stoppt laufende Vorgänger-Jobs bei neuem Start
 
 permissions:
   contents: write           # Zwingend erforderlich für git push
@@ -20,7 +20,7 @@ jobs:
       - name: Code auschecken
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0    # Lädt die komplette Git-Historie für Rebase
 
       - name: Python einrichten
         uses: actions/setup-python@v5
@@ -36,7 +36,13 @@ jobs:
         run: python generate_m3u.py
 
       - name: Änderungen speichern und hochladen
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Auto-update playlist.m3u"
-          file_pattern: playlist.m3u
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git fetch origin main
+          git add playlist.m3u
+          if ! git diff --quiet || ! git diff --staged --quiet; then
+            git pull --rebase origin main
+            git commit -m "Auto-update playlist.m3u"
+            git push origin main
+          fi
