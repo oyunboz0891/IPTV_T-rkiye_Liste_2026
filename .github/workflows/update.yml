@@ -5,6 +5,10 @@ on:
     - cron: '0 */3 * * *'  # Alle 3 Stunden
   workflow_dispatch:        # Manuelles Auslösen per Klick
 
+concurrency:
+  group: auto-update-m3u
+  cancel-in-progress: false
+
 permissions:
   contents: write           # Zwingend erforderlich für git push
 
@@ -15,6 +19,8 @@ jobs:
     steps:
       - name: Code auschecken
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # Holt die History mit, wichtig für git pull/rebase
 
       - name: Python einrichten
         uses: actions/setup-python@v5
@@ -30,8 +36,8 @@ jobs:
         run: python generate_m3u.py
 
       - name: Änderungen speichern und hochladen
-  run: |
-    git config --local user.email "action@github.com"
-    git config --local user.name "GitHub Action"
-    git add playlist.m3u
-    git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update playlist.m3u" && git pull --rebase && git push)
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add playlist.m3u
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update playlist.m3u" && git pull --rebase origin main && git push)
