@@ -1,0 +1,16 @@
+#EXTM3U
+
+#EXTINF:-1 tvg-id="NOW.tr" group-title="Ulusal",NOW TV
+https://www.nowtv.com.tr/'+ item.video_url +'
+
+#EXTINF:-1 tvg-id="360.tr" group-title="Ulusal",TV360
+https://turkmedya-live.ercdn.net/tv360/tv360_720p.m3u8
+
+#EXTINF:-1 tvg-id="MinikaCocuk.tr" group-title="Cocuk",minika COCUK
+https://www.minikacocuk.com.tr/sound/14.mp3
+
+#EXTINF:-1 tvg-id="24.tr" group-title="Haber",24 TV
+https://turkmedya-live.ercdn.net/tv24/tv24_1080p.m3u8
+
+#EXTINF:-1 tvg-id="GZT.tr" group-title="Belgesel",GZT
+https://gzttv-live.lg.mncdn.com/gzttv-live/gzttv/chunklist_w924299289.m3u8
